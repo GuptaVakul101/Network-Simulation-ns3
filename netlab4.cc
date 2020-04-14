@@ -468,47 +468,47 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
   // Creating plot
 
-  Gnuplot plot1 ("buffvsfairness");
-  plot1.SetTitle ("buffvsfairness");
-  plot1.SetTerminal ("png");
-  plot1.SetLegend ("BufferSize", "FairnessIndex");
-  plot1.AppendExtra ("set xrange [0:800]");
+  Gnuplot graph1 ("buffvsfairness");
+  graph1.SetTitle ("buffvsfairness");
+  graph1.SetTerminal ("png");
+  graph1.SetLegend ("BufferSize", "FairnessIndex");
+  graph1.AppendExtra ("set xrange [0:800]");
 
   // Adding dataset to the plot
 
   // plot1.AddDataset (dataset1);
-	plot1.AddDataset (plot_dataset[0]);
+	graph1.AddDataset (plot_dataset[0]);
 	std :: ofstream plotFile1 ("BufferSize-vs-FairnessIndex.plt");
-	plot1.GenerateOutput (plotFile1);
+	graph1.GenerateOutput (plotFile1);
 	plotFile1.close ();
 
 /***************************************/
 
-  Gnuplot plot2 ("buffvsudp");
-  plot2.SetTitle ("buffvsudpthroughput");
-  plot2.SetTerminal ("png");
-  plot2.SetLegend ("BufferSize", "udpthroughput");
-  plot2.AppendExtra ("set xrange [0:800]");
+  Gnuplot graph2 ("buffvsudp");
+  graph2.SetTitle ("buffvsudpthroughput");
+  graph2.SetTerminal ("png");
+  graph2.SetLegend ("BufferSize", "udpthroughput");
+  graph2.AppendExtra ("set xrange [0:800]");
 
   // plot2.AddDataset (dataset2);
-  plot2.AddDataset (plot_dataset[1]);
+  graph2.AddDataset (plot_dataset[1]);
 
   std :: ofstream plotFile2 ("BufferSize-vs-UDPthroughput.plt");
-  plot2.GenerateOutput (plotFile2);
+  graph2.GenerateOutput (plotFile2);
   plotFile2.close ();
 
 /***************************************/
 
-  Gnuplot plot3 ("buffvstcp");
-  plot3.SetTitle ("buffvstcpthroughput");
-  plot3.SetTerminal ("png");
-  plot3.SetLegend ("BufferSize", "tcpthroughput");
-  plot3.AppendExtra ("set xrange [0:800]");
+  Gnuplot graph3 ("buffvstcp");
+  graph3.SetTitle ("buffvstcpthroughput");
+  graph3.SetTerminal ("png");
+  graph3.SetLegend ("BufferSize", "tcpthroughput");
+  graph3.AppendExtra ("set xrange [0:800]");
 
-  plot3.AddDataset (plot_dataset[2]);
+  graph3.AddDataset (plot_dataset[2]);
   // plot3.AddDataset (dataset3);
   std :: ofstream plotFile3 ("BufferSize-vs-TCPthroughput.plt");
-  plot3.GenerateOutput (plotFile3);
+  graph3.GenerateOutput (plotFile3);
   plotFile3.close ();
 
 /***************************************/
@@ -524,30 +524,30 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
   }
 
-  Gnuplot plot4 ("udpvstcpthroughput");
-  plot4.SetTitle ("Effect of UDP flow on tcpthroughput");
-  plot4.SetTerminal ("png");
-  plot4.SetLegend ("Time", "TCPthroughput");
+  Gnuplot graph4 ("udpvstcpthroughput");
+  graph4.SetTitle ("Effect of UDP flow on tcpthroughput");
+  graph4.SetTerminal ("png");
+  graph4.SetLegend ("Time", "TCPthroughput");
 
   // plot4.AddDataset (dataset4);
-  plot4.AddDataset (plot_dataset[3]);
+  graph4.AddDataset (plot_dataset[3]);
 
   std :: ofstream plotFile4 ("Time-vs-TCPthroughput.plt");
-  plot4.GenerateOutput (plotFile4);
+  graph4.GenerateOutput (plotFile4);
   plotFile4.close ();
 
 /***************************************/
 
-  Gnuplot plot5 ("udpvsudpthroughput");
-  plot5.SetTitle ("Effect of UDP flow on tcpthroughput");
-  plot5.SetTerminal ("png");
-  plot5.SetLegend ("Time", "UDPthroughput");
+  Gnuplot graph5 ("udpvsudpthroughput");
+  graph5.SetTitle ("Effect of UDP flow on tcpthroughput");
+  graph5.SetTerminal ("png");
+  graph5.SetLegend ("Time", "UDPthroughput");
 
   // plot5.AddDataset (dataset5);
-  plot5.AddDataset (plot_dataset[4]);
+  graph5.AddDataset (plot_dataset[4]);
 
   std :: ofstream plotFile5 ("Time-vs-UDPthroughput.plt");
-  plot5.GenerateOutput (plotFile5);
+  graph5.GenerateOutput (plotFile5);
   plotFile5.close ();
 
   NS_LOG_INFO ("Done.");
