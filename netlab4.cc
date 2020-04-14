@@ -157,9 +157,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     //destination node to receive TCP connections and data
     Address sinkAddress1 (InetSocketAddress (i4i7.GetAddress (1), port));
     PacketSinkHelper packetSinkHelper1 ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sinkApps1 = packetSinkHelper1.Install (nodeContainer.Get (7));
-    sinkApps1.Start (Seconds (0.));
-    sinkApps1.Stop (Seconds (15.));
+    ApplicationContainer sink_conn1 = packetSinkHelper1.Install (nodeContainer.Get (7));
+    sink_conn1.Start (Seconds (0.));
+    sink_conn1.Stop (Seconds (15.));
 
     //creating socket at host
     Ptr<Socket> ns3TcpSocket1 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
@@ -167,102 +167,102 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     ns3TcpSocket1->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     //creating a Myapp object app1
-    Ptr<MyApp> app1 = CreateObject<MyApp> ();
-    app1->Setup (ns3TcpSocket1, sinkAddress1, 1500, 1000000, DataRate ("20Mbps"));
-    nodeContainer.Get (0)->AddApplication (app1);
+    Ptr<MyApp> conn1 = CreateObject<MyApp> ();
+    conn1->Setup (ns3TcpSocket1, sinkAddress1, 1500, 1000000, DataRate ("20Mbps"));
+    nodeContainer.Get (0)->AddApplication (conn1);
     //setting start and stop time of app
-    app1->SetStartTime (Seconds (1.));
-    app1->SetStopTime (Seconds (15.));
+    conn1->SetStartTime (Seconds (1.));
+    conn1->SetStopTime (Seconds (15.));
 
 
     // UDP - h4 to h3
     port = 8082;
     Address sinkAddress2 (InetSocketAddress (i2i3.GetAddress (0), port));
     PacketSinkHelper packetSinkHelper2 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sinkApps2 = packetSinkHelper2.Install (nodeContainer.Get (2));
-    sinkApps2.Start (Seconds (0.));
-    sinkApps2.Stop (Seconds (15.));
+    ApplicationContainer sink_conn2 = packetSinkHelper2.Install (nodeContainer.Get (2));
+    sink_conn2.Start (Seconds (0.));
+    sink_conn2.Stop (Seconds (15.));
 
     Ptr<Socket> ns3UdpSocket2 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
     ns3UdpSocket2->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> app2 = CreateObject<MyApp> ();
-    app2->Setup (ns3UdpSocket2, sinkAddress2, 1500, 1000000, DataRate ("20Mbps"));
-    nodeContainer.Get (5)->AddApplication (app2);
-    app2->SetStartTime (Seconds (1.));
-    app2->SetStopTime (Seconds (15.));
+    Ptr<MyApp> conn2 = CreateObject<MyApp> ();
+    conn2->Setup (ns3UdpSocket2, sinkAddress2, 1500, 1000000, DataRate ("20Mbps"));
+    nodeContainer.Get (5)->AddApplication (conn2);
+    conn2->SetStartTime (Seconds (1.));
+    conn2->SetStopTime (Seconds (15.));
 
 
     //tcp - h1 to h2
     port = 8083;
     Address sinkAddress3 (InetSocketAddress (i1i3.GetAddress (0), port));
     PacketSinkHelper packetSinkHelper3("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sinkApps3 = packetSinkHelper3.Install (nodeContainer.Get (1));
-    sinkApps3.Start (Seconds (0.));
-    sinkApps3.Stop (Seconds (15.));
+    ApplicationContainer sink_conn3 = packetSinkHelper3.Install (nodeContainer.Get (1));
+    sink_conn3.Start (Seconds (0.));
+    sink_conn3.Stop (Seconds (15.));
 
     Ptr<Socket> ns3TcpSocket3 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
     ns3TcpSocket3->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
     ns3TcpSocket3->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> app3 = CreateObject<MyApp> ();
-    app3->Setup (ns3TcpSocket3, sinkAddress3, 1500, 1000000, DataRate ("20Mbps"));
-    nodeContainer.Get (0)->AddApplication (app3);
-    app3->SetStartTime (Seconds (1.));
-    app3->SetStopTime (Seconds (15.));
+    Ptr<MyApp> conn3 = CreateObject<MyApp> ();
+    conn3->Setup (ns3TcpSocket3, sinkAddress3, 1500, 1000000, DataRate ("20Mbps"));
+    nodeContainer.Get (0)->AddApplication (conn3);
+    conn3->SetStartTime (Seconds (1.));
+    conn3->SetStopTime (Seconds (15.));
 
     //tcp - h5 to h6
     port = 8084;
     Address sinkAddress4 (InetSocketAddress (i4i7.GetAddress (1), port));
     PacketSinkHelper packetSinkHelper4("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sinkApps4 = packetSinkHelper4.Install (nodeContainer.Get (7));
-    sinkApps4.Start (Seconds (0.));
-    sinkApps4.Stop (Seconds (15.));
+    ApplicationContainer sink_conn4 = packetSinkHelper4.Install (nodeContainer.Get (7));
+    sink_conn4.Start (Seconds (0.));
+    sink_conn4.Stop (Seconds (15.));
 
     Ptr<Socket> ns3TcpSocket4 = Socket::CreateSocket (nodeContainer.Get (6), TcpSocketFactory::GetTypeId ());
     ns3TcpSocket4->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
     ns3TcpSocket4->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> app4 = CreateObject<MyApp> ();
-    app4->Setup (ns3TcpSocket4, sinkAddress4, 1500, 1000000, DataRate ("20Mbps"));
-    nodeContainer.Get (6)->AddApplication (app4);
-    app4->SetStartTime (Seconds (1.));
-    app4->SetStopTime (Seconds (15.));
+    Ptr<MyApp> conn4 = CreateObject<MyApp> ();
+    conn4->Setup (ns3TcpSocket4, sinkAddress4, 1500, 1000000, DataRate ("20Mbps"));
+    nodeContainer.Get (6)->AddApplication (conn4);
+    conn4->SetStartTime (Seconds (1.));
+    conn4->SetStopTime (Seconds (15.));
 
     //udp - h2 to h3
     port = 8085;
     Address sinkAddress5 (InetSocketAddress (i3i4.GetAddress (0), port));
     PacketSinkHelper packetSinkHelper5 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sinkApps5 = packetSinkHelper5.Install (nodeContainer.Get (2));
-    sinkApps5.Start (Seconds (0.));
-    sinkApps5.Stop (Seconds (15.));
+    ApplicationContainer sink_conn5 = packetSinkHelper5.Install (nodeContainer.Get (2));
+    sink_conn5.Start (Seconds (0.));
+    sink_conn5.Stop (Seconds (15.));
 
     Ptr<Socket> ns3UdpSocket5 = Socket::CreateSocket (nodeContainer.Get (1), UdpSocketFactory::GetTypeId ());
     ns3UdpSocket5->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> app5 = CreateObject<MyApp> ();
-    app5->Setup (ns3UdpSocket5, sinkAddress5, 1500, 1000000, DataRate ("20Mbps"));
-    nodeContainer.Get (1)->AddApplication (app5);
-    app5->SetStartTime (Seconds (1.));
-    app5->SetStopTime (Seconds (15.));
+    Ptr<MyApp> conn5 = CreateObject<MyApp> ();
+    conn5->Setup (ns3UdpSocket5, sinkAddress5, 1500, 1000000, DataRate ("20Mbps"));
+    nodeContainer.Get (1)->AddApplication (conn5);
+    conn5->SetStartTime (Seconds (1.));
+    conn5->SetStopTime (Seconds (15.));
 
 
     //udp - h4 to h5
     port = 8086;
     Address sinkAddress6 (InetSocketAddress (i4i6.GetAddress (1), port));
     PacketSinkHelper packetSinkHelper6 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sinkApps6 = packetSinkHelper6.Install (nodeContainer.Get (6));
-    sinkApps6.Start (Seconds (0.));
-    sinkApps6.Stop (Seconds (15.));
+    ApplicationContainer sink_conn6 = packetSinkHelper6.Install (nodeContainer.Get (6));
+    sink_conn6.Start (Seconds (0.));
+    sink_conn6.Stop (Seconds (15.));
 
     Ptr<Socket> ns3UdpSocket6 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
     ns3UdpSocket6->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> app6 = CreateObject<MyApp> ();
-    app6->Setup (ns3UdpSocket6, sinkAddress6, 1500, 1000000, DataRate ("20Mbps"));
-    nodeContainer.Get (5)->AddApplication (app6);
-    app6->SetStartTime (Seconds (1.));
-    app6->SetStopTime (Seconds (15.));
+    Ptr<MyApp> conn6 = CreateObject<MyApp> ();
+    conn6->Setup (ns3UdpSocket6, sinkAddress6, 1500, 1000000, DataRate ("20Mbps"));
+    nodeContainer.Get (5)->AddApplication (conn6);
+    conn6->SetStartTime (Seconds (1.));
+    conn6->SetStopTime (Seconds (15.));
 
 
     //Helper to enable IP flow monitoring on a set of Nodes.
@@ -272,27 +272,27 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     if(size_buffer == 10*1500){
       //scheduling increase rate function over time to see udp flow rate's effect on tcp/udp throughput.
       //changing th udp flow rate for app5 only and seeing it's effect on other flows
-      Simulator::Schedule (Seconds(2.0), &IncRate, app5, DataRate("30Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(3.0), &IncRate, app5, DataRate("40Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(4.0), &IncRate, app5, DataRate("70Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(5.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(6.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(7.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(8.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(10.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(15.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(2.0), &IncRate, conn5, DataRate("30Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(3.0), &IncRate, conn5, DataRate("40Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("70Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(7.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(8.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(10.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(15.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
     }
     else {
       //scheduling udp flow rate gradually over time from 20Mbps to 100Mbps
-      Simulator::Schedule (Seconds(2.0), &IncRate, app5, DataRate("30Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(3.0), &IncRate, app5, DataRate("40Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(4.0), &IncRate, app5, DataRate("70Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(5.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(6.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(7.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(8.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(10.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(15.0), &IncRate, app5, DataRate("100Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(2.0), &IncRate, conn5, DataRate("30Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(3.0), &IncRate, conn5, DataRate("40Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("70Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(7.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(8.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(10.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(15.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
     }
 
     NS_LOG_INFO ("Run Simulation.");
