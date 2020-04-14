@@ -13,9 +13,9 @@
 
 using namespace ns3;
 
-std::vector<double>tcpth;
-std::vector<double>udpth;
-std::vector< double >dtime;
+std::vector<double>tcp_path;
+std::vector<double>udp_path;
+std::vector< double >time_dvec;
 
 NS_LOG_COMPONENT_DEFINE ("Assignment_4");
 
@@ -45,8 +45,8 @@ IncRate (Ptr<MyApp> my_app, DataRate rate_flow, FlowMonitorHelper *help_fm, Ptr<
 
       }
       std::cout << final_tcp<< "::"<<final_udp<<"\n";
-      tcpth.push_back(final_tcp);
-      udpth.push_back(final_udp);
+      tcp_path.push_back(final_tcp);
+      udp_path.push_back(final_udp);
 
   }
     return;
@@ -401,14 +401,14 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
 /***************************************/
 
-  dtime.resize(9);
-  dtime[0] = 2; dtime[1] = 3; dtime[2] = 4; dtime[3] =5; dtime[4] = 6; dtime[5] = 7; dtime[6] = 8; dtime[7] = 10; dtime[8] = 15;
+  time_dvec.resize(9);
+  time_dvec[0] = 2; time_dvec[1] = 3; time_dvec[2] = 4; time_dvec[3] =5; time_dvec[4] = 6; time_dvec[5] = 7; time_dvec[6] = 8; time_dvec[7] = 10; time_dvec[8] = 15;
    // dtime[9] = 16; dtime[10] = 17; dtime[11] = 18; dtime[12] = 20,dtime[13]=25;
   for(int i =0 ;i < 9; i++){
-      plot_dataset[3].Add(dtime[i],tcpth[i]);
+      plot_dataset[3].Add(time_dvec[i],tcp_path[i]);
     // dataset4.Add(dtime[i],tcpth[i]);
     // dataset5.Add(dtime[i],udpth[i]);
-    plot_dataset[4].Add(dtime[i],udpth[i]);
+    plot_dataset[4].Add(time_dvec[i],udp_path[i]);
 
   }
 
