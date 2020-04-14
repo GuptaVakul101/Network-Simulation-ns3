@@ -9,6 +9,7 @@
 #include "ns3/flow-monitor-module.h"
 #include "ns3/ipv4-global-routing-helper.h"
 #include "ns3/gnuplot.h"
+#include "header_file.h"
 
 using namespace ns3;
 
@@ -18,133 +19,13 @@ std::vector< double >dtime;
 
 NS_LOG_COMPONENT_DEFINE ("Assignment_4");
 
-// Coded an Application so we could take that Socket and use it during simulation
 
-class MyApp : public Application
-{
-public:
-
-  MyApp ();
-  virtual ~MyApp();
-
-  void Setup (Ptr<Socket> socket, Address address, uint32_t packetSize, uint32_t nPackets, DataRate dataRate);
-  void ChangeRate(DataRate newrate);
-
-private:
-  virtual void StartApplication (void);
-  virtual void StopApplication (void);
-
-  void ScheduleTx (void);
-  void SendPacket (void);
-
-  Ptr<Socket>     m_socket;
-  Address         m_peer;
-  uint32_t        m_packetSize;
-  uint32_t        m_nPackets;
-  DataRate        m_dataRate;
-  EventId         m_sendEvent;
-  bool            m_running;
-  uint32_t        m_packetsSent;
-};
-
-// Constructor for Myapp class
-
-MyApp::MyApp ()
-  : m_socket (0),
-    m_peer (),
-    m_packetSize (0),
-    m_nPackets (0),
-    m_dataRate (0),
-    m_sendEvent (),
-    m_running (false),
-    m_packetsSent (0)
-{
-}
-
-// Destructor for Myapp class
-
-MyApp::~MyApp()
-{
-  m_socket = 0;
-}
-
-//allow the Socket to be created at configuration time
-
-void
-MyApp::Setup (Ptr<Socket> socket, Address address, uint32_t packetSize, uint32_t nPackets, DataRate dataRate)
-{
-  m_socket = socket;
-  m_peer = address;
-  m_packetSize = packetSize;
-  m_nPackets = nPackets;
-  m_dataRate = dataRate;
-}
-
-//required to start sending data during the simulation.
-void
-MyApp::StartApplication (void)
-{
-  m_running = true;
-  m_packetsSent = 0;
-  m_socket->Bind ();
-  m_socket->Connect (m_peer);
-  SendPacket ();
-}
-
-//required to stop sending data during the simulation.
-void
-MyApp::StopApplication (void)
-{
-  m_running = false;
-
-  if (m_sendEvent.IsRunning ())
-    {
-      Simulator::Cancel (m_sendEvent);
-    }
-
-  if (m_socket)
-    {
-      m_socket->Close ();
-    }
-}
-
-// starts data flow
-void
-MyApp::SendPacket (void)
-{
-  Ptr<Packet> packet = Create<Packet> (m_packetSize);
-  m_socket->Send (packet);
-
-  if (++m_packetsSent < m_nPackets)
-    {
-      ScheduleTx ();
-    }
-}
-
-//schedule the send packet function tnext
-void
-MyApp::ScheduleTx (void)
-{
-  if (m_running)
-    {
-      Time tNext (Seconds (m_packetSize * 8 / static_cast<double> (m_dataRate.GetBitRate ())));
-      m_sendEvent = Simulator::Schedule (tNext, &MyApp::SendPacket, this);
-    }
-}
-
-//change rate of our app
-void
-MyApp::ChangeRate(DataRate newrate)
-{
-   m_dataRate = newrate;
-   return;
-}
 
 //increase rate at scheduled time
 void
 IncRate (Ptr<MyApp> app, DataRate rate, FlowMonitorHelper *fmhelper, Ptr<FlowMonitor> flowMon, int capture)
 {
-	app->ChangeRate(rate);
+  app->ChangeRate(rate);
   if(capture){
     std::map<FlowId, FlowMonitor::FlowStats> flowStats = flowMon->GetFlowStats();
       Ptr<Ipv4FlowClassifier> classing = DynamicCast<Ipv4FlowClassifier> (fmhelper->GetClassifier());
@@ -282,8 +163,8 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     //creating socket at host
     Ptr<Socket> ns3TcpSocket1 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
-  	ns3TcpSocket1->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
-  	ns3TcpSocket1->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    ns3TcpSocket1->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
+    ns3TcpSocket1->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     //creating a Myapp object app1
     Ptr<MyApp> app1 = CreateObject<MyApp> ();
@@ -303,7 +184,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     sinkApps2.Stop (Seconds (15.));
 
     Ptr<Socket> ns3UdpSocket2 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
-  	ns3UdpSocket2->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    ns3UdpSocket2->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app2 = CreateObject<MyApp> ();
     app2->Setup (ns3UdpSocket2, sinkAddress2, 1500, 1000000, DataRate ("20Mbps"));
@@ -321,8 +202,8 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     sinkApps3.Stop (Seconds (15.));
 
     Ptr<Socket> ns3TcpSocket3 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
-  	ns3TcpSocket3->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
-  	ns3TcpSocket3->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    ns3TcpSocket3->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
+    ns3TcpSocket3->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app3 = CreateObject<MyApp> ();
     app3->Setup (ns3TcpSocket3, sinkAddress3, 1500, 1000000, DataRate ("20Mbps"));
@@ -339,8 +220,8 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     sinkApps4.Stop (Seconds (15.));
 
     Ptr<Socket> ns3TcpSocket4 = Socket::CreateSocket (nodeContainer.Get (6), TcpSocketFactory::GetTypeId ());
-  	ns3TcpSocket4->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
-  	ns3TcpSocket4->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    ns3TcpSocket4->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
+    ns3TcpSocket4->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app4 = CreateObject<MyApp> ();
     app4->Setup (ns3TcpSocket4, sinkAddress4, 1500, 1000000, DataRate ("20Mbps"));
@@ -357,7 +238,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     sinkApps5.Stop (Seconds (15.));
 
     Ptr<Socket> ns3UdpSocket5 = Socket::CreateSocket (nodeContainer.Get (1), UdpSocketFactory::GetTypeId ());
-  	ns3UdpSocket5->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    ns3UdpSocket5->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app5 = CreateObject<MyApp> ();
     app5->Setup (ns3UdpSocket5, sinkAddress5, 1500, 1000000, DataRate ("20Mbps"));
@@ -375,7 +256,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     sinkApps6.Stop (Seconds (15.));
 
     Ptr<Socket> ns3UdpSocket6 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
-  	ns3UdpSocket6->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    ns3UdpSocket6->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app6 = CreateObject<MyApp> ();
     app6->Setup (ns3UdpSocket6, sinkAddress6, 1500, 1000000, DataRate ("20Mbps"));
@@ -419,7 +300,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     //executing the simulation
     Simulator::Run ();
 
-  	monitor->CheckForLostPackets ();
+    monitor->CheckForLostPackets ();
 
     //Classifies packets by looking at their IP and TCP/UDP headers.
     Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier> (flowmon.GetClassifier ());
@@ -431,11 +312,11 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     for (std::map<FlowId, FlowMonitor::FlowStats>::const_iterator i = stats.begin (); i != stats.end (); ++i)
     {
-    	  Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow (i->first);
+        Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow (i->first);
         // Calculating Throughput for different flows
         double TPut = i->second.rxBytes * 8.0 / (i->second.timeLastRxPacket.GetSeconds() - i->second.timeFirstTxPacket.GetSeconds())/1024/1024;
         Sumx += TPut;
-    	  SumSqx += TPut * TPut ;
+        SumSqx += TPut * TPut ;
         // If the connection is using TCP protocol.
         if(t.protocol == 6){
           tcpthroughput += TPut;
@@ -443,8 +324,8 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     }
     // Calculating UDP throughput
     udpthroughput = Sumx - tcpthroughput;
-  	double FairnessIndex = (Sumx * Sumx)/ (6 * SumSqx) ;
-  	// dataset1.Add (bufSize/1500, FairnessIndex);
+    double FairnessIndex = (Sumx * Sumx)/ (6 * SumSqx) ;
+    // dataset1.Add (bufSize/1500, FairnessIndex);
     plot_dataset[0].Add (size_buffer/1500, FairnessIndex);
 
     // dataset2.Add(bufSize/1500, udpthroughput);
@@ -454,7 +335,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     plot_dataset[2].Add(size_buffer/1500, tcpthroughput);
 
 
-    std :: cout << " FairnessIndex:	" << FairnessIndex << std :: endl;
+    std :: cout << " FairnessIndex: " << FairnessIndex << std :: endl;
     monitor->SerializeToXmlFile("lab-1.flowmon", true, true);
     Simulator::Destroy ();
 
@@ -476,48 +357,48 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
   // Creating plot
 
-  Gnuplot plot1 ("buffvsfairness");
-  plot1.SetTitle ("buffvsfairness");
-  plot1.SetTerminal ("png");
-  plot1.SetLegend ("BufferSize", "FairnessIndex");
-  plot1.AppendExtra ("set xrange [0:800]");
+  Gnuplot graph1 ("buffvsfairness");
+  graph1.SetTitle ("buffvsfairness");
+  graph1.SetTerminal ("png");
+  graph1.SetLegend ("BufferSize", "FairnessIndex");
+  graph1.AppendExtra ("set xrange [0:800]");
 
   // Adding dataset to the plot
 
   // plot1.AddDataset (dataset1);
-	plot1.AddDataset (plot_dataset[0]);
-	std :: ofstream plotFile1 ("BufferSize-vs-FairnessIndex.plt");
-	plot1.GenerateOutput (plotFile1);
-	plotFile1.close ();
+  graph1.AddDataset (plot_dataset[0]);
+  std :: ofstream output1 ("BufferSize-vs-FairnessIndex.plt");
+  graph1.GenerateOutput (output1);
+  output1.close ();
 
 /***************************************/
 
-  Gnuplot plot2 ("buffvsudp");
-  plot2.SetTitle ("buffvsudpthroughput");
-  plot2.SetTerminal ("png");
-  plot2.SetLegend ("BufferSize", "udpthroughput");
-  plot2.AppendExtra ("set xrange [0:800]");
+  Gnuplot graph2 ("buffvsudp");
+  graph2.SetTitle ("buffvsudpthroughput");
+  graph2.SetTerminal ("png");
+  graph2.SetLegend ("BufferSize", "udpthroughput");
+  graph2.AppendExtra ("set xrange [0:800]");
 
   // plot2.AddDataset (dataset2);
-  plot2.AddDataset (plot_dataset[1]);
+  graph2.AddDataset (plot_dataset[1]);
 
-  std :: ofstream plotFile2 ("BufferSize-vs-UDPthroughput.plt");
-  plot2.GenerateOutput (plotFile2);
-  plotFile2.close ();
+  std :: ofstream output2 ("BufferSize-vs-UDPthroughput.plt");
+  graph2.GenerateOutput (output2);
+  output2.close ();
 
 /***************************************/
 
-  Gnuplot plot3 ("buffvstcp");
-  plot3.SetTitle ("buffvstcpthroughput");
-  plot3.SetTerminal ("png");
-  plot3.SetLegend ("BufferSize", "tcpthroughput");
-  plot3.AppendExtra ("set xrange [0:800]");
+  Gnuplot graph3 ("buffvstcp");
+  graph3.SetTitle ("buffvstcpthroughput");
+  graph3.SetTerminal ("png");
+  graph3.SetLegend ("BufferSize", "tcpthroughput");
+  graph3.AppendExtra ("set xrange [0:800]");
 
-  plot3.AddDataset (plot_dataset[2]);
+  graph3.AddDataset (plot_dataset[2]);
   // plot3.AddDataset (dataset3);
-  std :: ofstream plotFile3 ("BufferSize-vs-TCPthroughput.plt");
-  plot3.GenerateOutput (plotFile3);
-  plotFile3.close ();
+  std :: ofstream output3 ("BufferSize-vs-TCPthroughput.plt");
+  graph3.GenerateOutput (output3);
+  output3.close ();
 
 /***************************************/
 
@@ -532,31 +413,31 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
   }
 
-  Gnuplot plot4 ("udpvstcpthroughput");
-  plot4.SetTitle ("Effect of UDP flow on tcpthroughput");
-  plot4.SetTerminal ("png");
-  plot4.SetLegend ("Time", "TCPthroughput");
+  Gnuplot graph4 ("udpvstcpthroughput");
+  graph4.SetTitle ("Effect of UDP flow on tcpthroughput");
+  graph4.SetTerminal ("png");
+  graph4.SetLegend ("Time", "TCPthroughput");
 
   // plot4.AddDataset (dataset4);
-  plot4.AddDataset (plot_dataset[3]);
+  graph4.AddDataset (plot_dataset[3]);
 
-  std :: ofstream plotFile4 ("Time-vs-TCPthroughput.plt");
-  plot4.GenerateOutput (plotFile4);
-  plotFile4.close ();
+  std :: ofstream output4 ("Time-vs-TCPthroughput.plt");
+  graph4.GenerateOutput (output4);
+  output4.close ();
 
 /***************************************/
 
-  Gnuplot plot5 ("udpvsudpthroughput");
-  plot5.SetTitle ("Effect of UDP flow on tcpthroughput");
-  plot5.SetTerminal ("png");
-  plot5.SetLegend ("Time", "UDPthroughput");
+  Gnuplot graph5 ("udpvsudpthroughput");
+  graph5.SetTitle ("Effect of UDP flow on tcpthroughput");
+  graph5.SetTerminal ("png");
+  graph5.SetLegend ("Time", "UDPthroughput");
 
   // plot5.AddDataset (dataset5);
-  plot5.AddDataset (plot_dataset[4]);
+  graph5.AddDataset (plot_dataset[4]);
 
-  std :: ofstream plotFile5 ("Time-vs-UDPthroughput.plt");
-  plot5.GenerateOutput (plotFile5);
-  plotFile5.close ();
+  std :: ofstream output5 ("Time-vs-UDPthroughput.plt");
+  graph5.GenerateOutput (output5);
+  output5.close ();
 
   NS_LOG_INFO ("Done.");
 }
