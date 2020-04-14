@@ -340,14 +340,14 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     Simulator::Destroy ();
 
     // Changing buffer size
-    if(bufSize < 100*1500) {
-        bufSize+=12*1500;
+    if(size_buffer < 100*1500) {
+        size_buffer+=12*1500;
     }
     else {
-        if(bufSize < 400*1500){
-            bufSize+=120*1500;
+        if(size_buffer < 400*1500){
+            size_buffer+=120*1500;
         }else{
-            bufSize+=150*1500;
+            size_buffer+=150*1500;
         }
     }
     // size_buffer+=200*1500
