@@ -308,7 +308,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     //object that monitors and reports back packet flows observed during a simulation
     std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats ();
 
-    double Sumx = 0, SumSqx = 0, udpthroughput=0,tcpthroughput=0;
+    double Sumx = 0, SumSqx = 0, through_udp=0,tcpthroughput=0;
 
     for (std::map<FlowId, FlowMonitor::FlowStats>::const_iterator i = stats.begin (); i != stats.end (); ++i)
     {
@@ -323,13 +323,13 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
         }
     }
     // Calculating UDP throughput
-    udpthroughput = Sumx - tcpthroughput;
+    through_udp = Sumx - tcpthroughput;
     double FairnessIndex = (Sumx * Sumx)/ (6 * SumSqx) ;
     // dataset1.Add (bufSize/1500, FairnessIndex);
     plot_dataset[0].Add (size_buffer/1500, FairnessIndex);
 
     // dataset2.Add(bufSize/1500, udpthroughput);
-    plot_dataset[1].Add(size_buffer/1500, udpthroughput);
+    plot_dataset[1].Add(size_buffer/1500, through_udp);
 
     // dataset3.Add(bufSize/1500, tcpthroughput);
     plot_dataset[2].Add(size_buffer/1500, tcpthroughput);
