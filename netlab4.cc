@@ -244,27 +244,27 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     //creates interfaces and assigns IP addresses for the point-to-point devices.
 
     NS_LOG_INFO ("Assign IP Addresses.");
-    Ipv4AddressHelper ipv4;
-    ipv4.SetBase ("10.1.1.0", "255.255.255.0");
-    Ipv4InterfaceContainer i0i3 = ipv4.Assign (d0d3);
+    Ipv4AddressHelper address_helper;
+    address_helper.SetBase ("10.1.1.0", "255.255.255.0");
+    Ipv4InterfaceContainer i0i3 = address_helper.Assign (d0d3);
 
-    ipv4.SetBase ("10.1.2.0", "255.255.255.0");
-    Ipv4InterfaceContainer i1i3 = ipv4.Assign (d1d3);
+    address_helper.SetBase ("10.1.2.0", "255.255.255.0");
+    Ipv4InterfaceContainer i1i3 = address_helper.Assign (d1d3);
 
-    ipv4.SetBase ("10.1.3.0", "255.255.255.0");
-    Ipv4InterfaceContainer i2i3 = ipv4.Assign (d2d3);
+    address_helper.SetBase ("10.1.3.0", "255.255.255.0");
+    Ipv4InterfaceContainer i2i3 = address_helper.Assign (d2d3);
 
-    ipv4.SetBase ("10.1.4.0", "255.255.255.0");
-    Ipv4InterfaceContainer i3i4 = ipv4.Assign (d3d4);
+    address_helper.SetBase ("10.1.4.0", "255.255.255.0");
+    Ipv4InterfaceContainer i3i4 = address_helper.Assign (d3d4);
 
-    ipv4.SetBase ("10.1.5.0", "255.255.255.0");
-    Ipv4InterfaceContainer i4i5 = ipv4.Assign (d4d5);
+    address_helper.SetBase ("10.1.5.0", "255.255.255.0");
+    Ipv4InterfaceContainer i4i5 = address_helper.Assign (d4d5);
 
-    ipv4.SetBase ("10.1.6.0", "255.255.255.0");
-    Ipv4InterfaceContainer i4i6 = ipv4.Assign (d4d6);
+    address_helper.SetBase ("10.1.6.0", "255.255.255.0");
+    Ipv4InterfaceContainer i4i6 = address_helper.Assign (d4d6);
 
-    ipv4.SetBase ("10.1.7.0", "255.255.255.0");
-    Ipv4InterfaceContainer i4i7 = ipv4.Assign (d4d7);
+    address_helper.SetBase ("10.1.7.0", "255.255.255.0");
+    Ipv4InterfaceContainer i4i7 = address_helper.Assign (d4d7);
 
     NS_LOG_INFO ("Enable static global routing.");
     Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
