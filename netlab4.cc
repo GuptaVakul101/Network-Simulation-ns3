@@ -478,9 +478,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
   // plot1.AddDataset (dataset1);
 	graph1.AddDataset (plot_dataset[0]);
-	std :: ofstream plotFile1 ("BufferSize-vs-FairnessIndex.plt");
-	graph1.GenerateOutput (plotFile1);
-	plotFile1.close ();
+	std :: ofstream output1 ("BufferSize-vs-FairnessIndex.plt");
+	graph1.GenerateOutput (output1);
+	output1.close ();
 
 /***************************************/
 
@@ -493,9 +493,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
   // plot2.AddDataset (dataset2);
   graph2.AddDataset (plot_dataset[1]);
 
-  std :: ofstream plotFile2 ("BufferSize-vs-UDPthroughput.plt");
-  graph2.GenerateOutput (plotFile2);
-  plotFile2.close ();
+  std :: ofstream output2 ("BufferSize-vs-UDPthroughput.plt");
+  graph2.GenerateOutput (output2);
+  output2.close ();
 
 /***************************************/
 
@@ -507,9 +507,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
   graph3.AddDataset (plot_dataset[2]);
   // plot3.AddDataset (dataset3);
-  std :: ofstream plotFile3 ("BufferSize-vs-TCPthroughput.plt");
-  graph3.GenerateOutput (plotFile3);
-  plotFile3.close ();
+  std :: ofstream output3 ("BufferSize-vs-TCPthroughput.plt");
+  graph3.GenerateOutput (output3);
+  output3.close ();
 
 /***************************************/
 
@@ -532,9 +532,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
   // plot4.AddDataset (dataset4);
   graph4.AddDataset (plot_dataset[3]);
 
-  std :: ofstream plotFile4 ("Time-vs-TCPthroughput.plt");
-  graph4.GenerateOutput (plotFile4);
-  plotFile4.close ();
+  std :: ofstream output4 ("Time-vs-TCPthroughput.plt");
+  graph4.GenerateOutput (output4);
+  output4.close ();
 
 /***************************************/
 
@@ -546,9 +546,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
   // plot5.AddDataset (dataset5);
   graph5.AddDataset (plot_dataset[4]);
 
-  std :: ofstream plotFile5 ("Time-vs-UDPthroughput.plt");
-  graph5.GenerateOutput (plotFile5);
-  plotFile5.close ();
+  std :: ofstream output5 ("Time-vs-UDPthroughput.plt");
+  graph5.GenerateOutput (output5);
+  output5.close ();
 
   NS_LOG_INFO ("Done.");
 }
