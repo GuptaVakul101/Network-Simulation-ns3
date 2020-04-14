@@ -310,11 +310,11 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     double x = 0, y = 0, through_udp=0,through_tcp=0;
 
-    for (std::map<FlowId, FlowMonitor::FlowStats>::const_iterator i = statistics.begin (); i != statistics.end (); ++i)
+    for (std::map<FlowId, FlowMonitor::FlowStats>::const_iterator it = statistics.begin (); it != statistics.end (); ++it)
     {
-        Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow (i->first);
+        Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow (it->first);
         // Calculating Throughput for different flows
-        double TPut = i->second.rxBytes * 8.0 / (i->second.timeLastRxPacket.GetSeconds() - i->second.timeFirstTxPacket.GetSeconds())/1024/1024;
+        double TPut = it->second.rxBytes * 8.0 / (it->second.timeLastRxPacket.GetSeconds() - it->second.timeFirstTxPacket.GetSeconds())/1024/1024;
         x += TPut;
         y += TPut * TPut ;
         // If the connection is using TCP protocol.
