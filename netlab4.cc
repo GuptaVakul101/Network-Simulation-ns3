@@ -324,9 +324,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     }
     // Calculating UDP throughput
     through_udp = Sumx - through_tcp;
-    double FairnessIndex = (Sumx * Sumx)/ (6 * SumSqx) ;
+    double fair_id = (Sumx * Sumx)/ (6 * SumSqx) ;
     // dataset1.Add (bufSize/1500, FairnessIndex);
-    plot_dataset[0].Add (size_buffer/1500, FairnessIndex);
+    plot_dataset[0].Add (size_buffer/1500, fair_id);
 
     // dataset2.Add(bufSize/1500, udpthroughput);
     plot_dataset[1].Add(size_buffer/1500, through_udp);
@@ -335,7 +335,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     plot_dataset[2].Add(size_buffer/1500, through_tcp);
 
 
-    std :: cout << " FairnessIndex: " << FairnessIndex << std :: endl;
+    std :: cout << " FairnessIndex: " << fair_id << std :: endl;
     monitor->SerializeToXmlFile("lab-1.flowmon", true, true);
     Simulator::Destroy ();
 
