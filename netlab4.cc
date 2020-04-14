@@ -155,20 +155,20 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     uint16_t port = 8081;
     //destination node to receive TCP connections and data
-    Address sinkAddress1 (InetSocketAddress (i4i7.GetAddress (1), port));
-    PacketSinkHelper packetSinkHelper1 ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sink_conn1 = packetSinkHelper1.Install (nodeContainer.Get (7));
+    Address addr1 (InetSocketAddress (i4i7.GetAddress (1), port));
+    PacketSinkHelper helper1 ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
+    ApplicationContainer sink_conn1 = helper1.Install (nodeContainer.Get (7));
     sink_conn1.Start (Seconds (0.));
     sink_conn1.Stop (Seconds (15.));
 
     //creating socket at host
-    Ptr<Socket> ns3TcpSocket1 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
-    ns3TcpSocket1->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
-    ns3TcpSocket1->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    Ptr<Socket> tcp1 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
+    tcp1->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
+    tcp1->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     //creating a Myapp object app1
     Ptr<MyApp> conn1 = CreateObject<MyApp> ();
-    conn1->Setup (ns3TcpSocket1, sinkAddress1, 1500, 1000000, DataRate ("20Mbps"));
+    conn1->Setup (tcp1, addr1, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (0)->AddApplication (conn1);
     //setting start and stop time of app
     conn1->SetStartTime (Seconds (1.));
@@ -177,17 +177,17 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     // UDP - h4 to h3
     port = 8082;
-    Address sinkAddress2 (InetSocketAddress (i2i3.GetAddress (0), port));
-    PacketSinkHelper packetSinkHelper2 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sink_conn2 = packetSinkHelper2.Install (nodeContainer.Get (2));
+    Address addr2 (InetSocketAddress (i2i3.GetAddress (0), port));
+    PacketSinkHelper helper2 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
+    ApplicationContainer sink_conn2 = helper2.Install (nodeContainer.Get (2));
     sink_conn2.Start (Seconds (0.));
     sink_conn2.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3UdpSocket2 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
-    ns3UdpSocket2->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    Ptr<Socket> udp2 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
+    udp2->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> conn2 = CreateObject<MyApp> ();
-    conn2->Setup (ns3UdpSocket2, sinkAddress2, 1500, 1000000, DataRate ("20Mbps"));
+    conn2->Setup (udp2, addr2, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (5)->AddApplication (conn2);
     conn2->SetStartTime (Seconds (1.));
     conn2->SetStopTime (Seconds (15.));
@@ -195,53 +195,53 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     //tcp - h1 to h2
     port = 8083;
-    Address sinkAddress3 (InetSocketAddress (i1i3.GetAddress (0), port));
-    PacketSinkHelper packetSinkHelper3("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sink_conn3 = packetSinkHelper3.Install (nodeContainer.Get (1));
+    Address addr3 (InetSocketAddress (i1i3.GetAddress (0), port));
+    PacketSinkHelper helper3("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
+    ApplicationContainer sink_conn3 = helper3.Install (nodeContainer.Get (1));
     sink_conn3.Start (Seconds (0.));
     sink_conn3.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3TcpSocket3 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
-    ns3TcpSocket3->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
-    ns3TcpSocket3->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    Ptr<Socket> tcp3 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
+    tcp3->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
+    tcp3->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> conn3 = CreateObject<MyApp> ();
-    conn3->Setup (ns3TcpSocket3, sinkAddress3, 1500, 1000000, DataRate ("20Mbps"));
+    conn3->Setup (tcp3, addr3, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (0)->AddApplication (conn3);
     conn3->SetStartTime (Seconds (1.));
     conn3->SetStopTime (Seconds (15.));
 
     //tcp - h5 to h6
     port = 8084;
-    Address sinkAddress4 (InetSocketAddress (i4i7.GetAddress (1), port));
-    PacketSinkHelper packetSinkHelper4("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sink_conn4 = packetSinkHelper4.Install (nodeContainer.Get (7));
+    Address addr4 (InetSocketAddress (i4i7.GetAddress (1), port));
+    PacketSinkHelper helper4("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
+    ApplicationContainer sink_conn4 = helper4.Install (nodeContainer.Get (7));
     sink_conn4.Start (Seconds (0.));
     sink_conn4.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3TcpSocket4 = Socket::CreateSocket (nodeContainer.Get (6), TcpSocketFactory::GetTypeId ());
-    ns3TcpSocket4->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
-    ns3TcpSocket4->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    Ptr<Socket> tcp4 = Socket::CreateSocket (nodeContainer.Get (6), TcpSocketFactory::GetTypeId ());
+    tcp4->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
+    tcp4->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> conn4 = CreateObject<MyApp> ();
-    conn4->Setup (ns3TcpSocket4, sinkAddress4, 1500, 1000000, DataRate ("20Mbps"));
+    conn4->Setup (tcp4, addr4, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (6)->AddApplication (conn4);
     conn4->SetStartTime (Seconds (1.));
     conn4->SetStopTime (Seconds (15.));
 
     //udp - h2 to h3
     port = 8085;
-    Address sinkAddress5 (InetSocketAddress (i3i4.GetAddress (0), port));
-    PacketSinkHelper packetSinkHelper5 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sink_conn5 = packetSinkHelper5.Install (nodeContainer.Get (2));
+    Address addr5 (InetSocketAddress (i3i4.GetAddress (0), port));
+    PacketSinkHelper helper5 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
+    ApplicationContainer sink_conn5 = helper5.Install (nodeContainer.Get (2));
     sink_conn5.Start (Seconds (0.));
     sink_conn5.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3UdpSocket5 = Socket::CreateSocket (nodeContainer.Get (1), UdpSocketFactory::GetTypeId ());
-    ns3UdpSocket5->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    Ptr<Socket> udp5 = Socket::CreateSocket (nodeContainer.Get (1), UdpSocketFactory::GetTypeId ());
+    udp5->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> conn5 = CreateObject<MyApp> ();
-    conn5->Setup (ns3UdpSocket5, sinkAddress5, 1500, 1000000, DataRate ("20Mbps"));
+    conn5->Setup (udp5, addr5, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (1)->AddApplication (conn5);
     conn5->SetStartTime (Seconds (1.));
     conn5->SetStopTime (Seconds (15.));
@@ -249,17 +249,17 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     //udp - h4 to h5
     port = 8086;
-    Address sinkAddress6 (InetSocketAddress (i4i6.GetAddress (1), port));
-    PacketSinkHelper packetSinkHelper6 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
-    ApplicationContainer sink_conn6 = packetSinkHelper6.Install (nodeContainer.Get (6));
+    Address addr6 (InetSocketAddress (i4i6.GetAddress (1), port));
+    PacketSinkHelper helper6 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
+    ApplicationContainer sink_conn6 = helper6.Install (nodeContainer.Get (6));
     sink_conn6.Start (Seconds (0.));
     sink_conn6.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3UdpSocket6 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
-    ns3UdpSocket6->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+    Ptr<Socket> udp6 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
+    udp6->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> conn6 = CreateObject<MyApp> ();
-    conn6->Setup (ns3UdpSocket6, sinkAddress6, 1500, 1000000, DataRate ("20Mbps"));
+    conn6->Setup (udp6, addr6, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (5)->AddApplication (conn6);
     conn6->SetStartTime (Seconds (1.));
     conn6->SetStopTime (Seconds (15.));
