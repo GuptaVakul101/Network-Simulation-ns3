@@ -272,10 +272,10 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     //tcp - h1 to h6
     //create sockets using the class ns3::TcpSocketFactory
 
-    uint16_t sinkPort1 = 8081;
+    uint16_t port = 8081;
     //destination node to receive TCP connections and data
-    Address sinkAddress1 (InetSocketAddress (i4i7.GetAddress (1), sinkPort1));
-    PacketSinkHelper packetSinkHelper1 ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort1));
+    Address sinkAddress1 (InetSocketAddress (i4i7.GetAddress (1), port));
+    PacketSinkHelper packetSinkHelper1 ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps1 = packetSinkHelper1.Install (nodeContainer.Get (7));
     sinkApps1.Start (Seconds (0.));
     sinkApps1.Stop (Seconds (15.));
@@ -295,9 +295,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
 
     // UDP - h4 to h3
-    uint16_t sinkPort2 = 8082;
-    Address sinkAddress2 (InetSocketAddress (i2i3.GetAddress (0), sinkPort2));
-    PacketSinkHelper packetSinkHelper2 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort2));
+    port = 8082;
+    Address sinkAddress2 (InetSocketAddress (i2i3.GetAddress (0), port));
+    PacketSinkHelper packetSinkHelper2 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps2 = packetSinkHelper2.Install (nodeContainer.Get (2));
     sinkApps2.Start (Seconds (0.));
     sinkApps2.Stop (Seconds (15.));
@@ -313,9 +313,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
 
     //tcp - h1 to h2
-    uint16_t sinkPort3 = 8083;
-    Address sinkAddress3 (InetSocketAddress (i1i3.GetAddress (0), sinkPort3));
-    PacketSinkHelper packetSinkHelper3("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort3));
+    port = 8083;
+    Address sinkAddress3 (InetSocketAddress (i1i3.GetAddress (0), port));
+    PacketSinkHelper packetSinkHelper3("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps3 = packetSinkHelper3.Install (nodeContainer.Get (1));
     sinkApps3.Start (Seconds (0.));
     sinkApps3.Stop (Seconds (15.));
@@ -331,9 +331,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     app3->SetStopTime (Seconds (15.));
 
     //tcp - h5 to h6
-    uint16_t sinkPort4 = 8084;
-    Address sinkAddress4 (InetSocketAddress (i4i7.GetAddress (1), sinkPort4));
-    PacketSinkHelper packetSinkHelper4("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort4));
+    port = 8084;
+    Address sinkAddress4 (InetSocketAddress (i4i7.GetAddress (1), port));
+    PacketSinkHelper packetSinkHelper4("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps4 = packetSinkHelper4.Install (nodeContainer.Get (7));
     sinkApps4.Start (Seconds (0.));
     sinkApps4.Stop (Seconds (15.));
@@ -349,9 +349,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     app4->SetStopTime (Seconds (15.));
 
     //udp - h2 to h3
-    uint16_t sinkPort5 = 8085;
-    Address sinkAddress5 (InetSocketAddress (i3i4.GetAddress (0), sinkPort5));
-    PacketSinkHelper packetSinkHelper5 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort5));
+    port = 8085;
+    Address sinkAddress5 (InetSocketAddress (i3i4.GetAddress (0), port));
+    PacketSinkHelper packetSinkHelper5 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps5 = packetSinkHelper5.Install (nodeContainer.Get (2));
     sinkApps5.Start (Seconds (0.));
     sinkApps5.Stop (Seconds (15.));
@@ -367,9 +367,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
 
     //udp - h4 to h5
-    uint16_t sinkPort6 = 8086;
-    Address sinkAddress6 (InetSocketAddress (i4i6.GetAddress (1), sinkPort6));
-    PacketSinkHelper packetSinkHelper6 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort6));
+    port = 8086;
+    Address sinkAddress6 (InetSocketAddress (i4i6.GetAddress (1), port));
+    PacketSinkHelper packetSinkHelper6 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps6 = packetSinkHelper6.Install (nodeContainer.Get (6));
     sinkApps6.Start (Seconds (0.));
     sinkApps6.Stop (Seconds (15.));
