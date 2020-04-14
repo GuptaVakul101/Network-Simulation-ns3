@@ -23,30 +23,30 @@ NS_LOG_COMPONENT_DEFINE ("Assignment_4");
 
 //increase rate at scheduled time
 void
-IncRate (Ptr<MyApp> app, DataRate rate, FlowMonitorHelper *fmhelper, Ptr<FlowMonitor> flowMon, int capture)
+IncRate (Ptr<MyApp> my_app, DataRate rate_flow, FlowMonitorHelper *help_fm, Ptr<FlowMonitor> flow_monitoring, int is_graph_capture)
 {
-  app->ChangeRate(rate);
-  if(capture){
-    std::map<FlowId, FlowMonitor::FlowStats> flowStats = flowMon->GetFlowStats();
-      Ptr<Ipv4FlowClassifier> classing = DynamicCast<Ipv4FlowClassifier> (fmhelper->GetClassifier());
-      double sumtcp = 0,sumudp= 0;
-      for (std::map<FlowId, FlowMonitor::FlowStats>::const_iterator stats = flowStats.begin (); stats != flowStats.end (); ++stats)
+  my_app->ChangeRate(rate_flow);
+  if(is_graph_capture){
+    std::map<FlowId, FlowMonitor::FlowStats> stat_flow = flow_monitoring->GetFlowStats();
+      Ptr<Ipv4FlowClassifier> classing = DynamicCast<Ipv4FlowClassifier> (help_fm->GetClassifier());
+      double final_tcp = 0,final_udp= 0;
+      for (std::map<FlowId, FlowMonitor::FlowStats>::const_iterator statistics = stat_flow.begin (); statistics != stat_flow.end (); ++statistics)
       {
-        Ipv4FlowClassifier::FiveTuple tuple= classing->FindFlow (stats->first);
-        double tput =  stats->second.rxBytes * 8.0 / (stats->second.timeLastRxPacket.GetSeconds()-stats->second.timeFirstTxPacket.GetSeconds())/1024/1024 ;
+        Ipv4FlowClassifier::FiveTuple tuple= classing->FindFlow (statistics->first);
+        double throughput_val =  statistics->second.rxBytes * 8.0 / (statistics->second.timeLastRxPacket.GetSeconds()-statistics->second.timeFirstTxPacket.GetSeconds())/1024/1024 ;
 
         if(tuple.protocol == 6){
-          sumtcp += tput;
+          final_tcp += throughput_val;
 
         }
         if(tuple.protocol == 17){
-          sumudp += tput;
+          final_udp += throughput_val;
         }
 
       }
-      std::cout << sumtcp<< "::"<<sumudp<<"\n";
-      tcpth.push_back(sumtcp);
-      udpth.push_back(sumudp);
+      std::cout << final_tcp<< "::"<<final_udp<<"\n";
+      tcpth.push_back(final_tcp);
+      udpth.push_back(final_udp);
 
   }
     return;
@@ -127,25 +127,25 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     NS_LOG_INFO ("Assign IP Addresses.");
     Ipv4AddressHelper address_helper;
     address_helper.SetBase ("10.1.1.0", "255.255.255.0");
-    Ipv4InterfaceContainer i0i3 = address_helper.Assign (device_0device_3);
+    Ipv4InterfaceContainer interface_0interface_3 = address_helper.Assign (device_0device_3);
 
     address_helper.SetBase ("10.1.2.0", "255.255.255.0");
-    Ipv4InterfaceContainer i1i3 = address_helper.Assign (device_1device_3);
+    Ipv4InterfaceContainer interface_1interface_3 = address_helper.Assign (device_1device_3);
 
     address_helper.SetBase ("10.1.3.0", "255.255.255.0");
-    Ipv4InterfaceContainer i2i3 = address_helper.Assign (device_2device_3);
+    Ipv4InterfaceContainer interface_2interface_3 = address_helper.Assign (device_2device_3);
 
     address_helper.SetBase ("10.1.4.0", "255.255.255.0");
-    Ipv4InterfaceContainer i3i4 = address_helper.Assign (device_3device_4);
+    Ipv4InterfaceContainer interface_3interface_4 = address_helper.Assign (device_3device_4);
 
     address_helper.SetBase ("10.1.5.0", "255.255.255.0");
-    Ipv4InterfaceContainer i4i5 = address_helper.Assign (device_4device_5);
+    Ipv4InterfaceContainer interface_4interface_5 = address_helper.Assign (device_4device_5);
 
     address_helper.SetBase ("10.1.6.0", "255.255.255.0");
-    Ipv4InterfaceContainer i4i6 = address_helper.Assign (device_4device_6);
+    Ipv4InterfaceContainer interface_4interface_6 = address_helper.Assign (device_4device_6);
 
     address_helper.SetBase ("10.1.7.0", "255.255.255.0");
-    Ipv4InterfaceContainer i4i7 = address_helper.Assign (device_4device_7);
+    Ipv4InterfaceContainer interface_4interface_7 = address_helper.Assign (device_4device_7);
 
     NS_LOG_INFO ("Enable static global routing.");
     Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
@@ -155,7 +155,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     uint16_t port = 8081;
     //destination node to receive TCP connections and data
-    Address sinkAddress1 (InetSocketAddress (i4i7.GetAddress (1), port));
+    Address sinkAddress1 (InetSocketAddress (interface_4interface_7.GetAddress (1), port));
     PacketSinkHelper packetSinkHelper1 ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps1 = packetSinkHelper1.Install (nodeContainer.Get (7));
     sinkApps1.Start (Seconds (0.));
@@ -177,7 +177,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     // UDP - h4 to h3
     port = 8082;
-    Address sinkAddress2 (InetSocketAddress (i2i3.GetAddress (0), port));
+    Address sinkAddress2 (InetSocketAddress (interface_2interface_3.GetAddress (0), port));
     PacketSinkHelper packetSinkHelper2 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps2 = packetSinkHelper2.Install (nodeContainer.Get (2));
     sinkApps2.Start (Seconds (0.));
@@ -195,7 +195,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     //tcp - h1 to h2
     port = 8083;
-    Address sinkAddress3 (InetSocketAddress (i1i3.GetAddress (0), port));
+    Address sinkAddress3 (InetSocketAddress (interface_1interface_3.GetAddress (0), port));
     PacketSinkHelper packetSinkHelper3("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps3 = packetSinkHelper3.Install (nodeContainer.Get (1));
     sinkApps3.Start (Seconds (0.));
@@ -213,7 +213,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     //tcp - h5 to h6
     port = 8084;
-    Address sinkAddress4 (InetSocketAddress (i4i7.GetAddress (1), port));
+    Address sinkAddress4 (InetSocketAddress (interface_4interface_7.GetAddress (1), port));
     PacketSinkHelper packetSinkHelper4("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps4 = packetSinkHelper4.Install (nodeContainer.Get (7));
     sinkApps4.Start (Seconds (0.));
@@ -231,7 +231,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     //udp - h2 to h3
     port = 8085;
-    Address sinkAddress5 (InetSocketAddress (i3i4.GetAddress (0), port));
+    Address sinkAddress5 (InetSocketAddress (interface_3interface_4.GetAddress (0), port));
     PacketSinkHelper packetSinkHelper5 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps5 = packetSinkHelper5.Install (nodeContainer.Get (2));
     sinkApps5.Start (Seconds (0.));
@@ -249,7 +249,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
     //udp - h4 to h5
     port = 8086;
-    Address sinkAddress6 (InetSocketAddress (i4i6.GetAddress (1), port));
+    Address sinkAddress6 (InetSocketAddress (interface_4interface_6.GetAddress (1), port));
     PacketSinkHelper packetSinkHelper6 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), port));
     ApplicationContainer sinkApps6 = packetSinkHelper6.Install (nodeContainer.Get (6));
     sinkApps6.Start (Seconds (0.));
@@ -350,7 +350,6 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
             size_buffer+=150*1500;
         }
     }
-    // size_buffer+=200*1500
   }
 
 /***************************************/
