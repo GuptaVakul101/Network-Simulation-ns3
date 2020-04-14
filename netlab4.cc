@@ -266,33 +266,33 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
 
 
     //Helper to enable IP flow monitoring on a set of Nodes.
-    FlowMonitorHelper flowmon;
-    Ptr<FlowMonitor> monitor = flowmon.InstallAll();
+    FlowMonitorHelper helper_flow;
+    Ptr<FlowMonitor> monitor = helper_flow.InstallAll();
 
     if(size_buffer == 10*1500){
       //scheduling increase rate function over time to see udp flow rate's effect on tcp/udp throughput.
       //changing th udp flow rate for app5 only and seeing it's effect on other flows
-      Simulator::Schedule (Seconds(2.0), &IncRate, conn5, DataRate("30Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(3.0), &IncRate, conn5, DataRate("40Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("70Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(7.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(8.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(10.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
-      Simulator::Schedule (Seconds(15.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,1);
+      Simulator::Schedule (Seconds(2.0), &IncRate, conn5, DataRate("30Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(3.0), &IncRate, conn5, DataRate("40Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("70Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(7.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(8.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(10.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(15.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,1);
     }
     else {
       //scheduling udp flow rate gradually over time from 20Mbps to 100Mbps
-      Simulator::Schedule (Seconds(2.0), &IncRate, conn5, DataRate("30Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(3.0), &IncRate, conn5, DataRate("40Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("70Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(7.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(8.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(10.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
-      Simulator::Schedule (Seconds(15.0), &IncRate, conn5, DataRate("100Mbps"), &flowmon, monitor,0);
+      Simulator::Schedule (Seconds(2.0), &IncRate, conn5, DataRate("30Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(3.0), &IncRate, conn5, DataRate("40Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("70Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(7.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(8.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(10.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(15.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,0);
     }
 
     NS_LOG_INFO ("Run Simulation.");
@@ -303,7 +303,7 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     monitor->CheckForLostPackets ();
 
     //Classifies packets by looking at their IP and TCP/UDP headers.
-    Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier> (flowmon.GetClassifier ());
+    Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier> (helper_flow.GetClassifier ());
 
     //object that monitors and reports back packet flows observed during a simulation
     std::map<FlowId, FlowMonitor::FlowStats> statistics = monitor->GetFlowStats ();
