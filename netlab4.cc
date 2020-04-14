@@ -208,13 +208,13 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     nodeContainer.Create (8);
 
 //creating node containers which creates two nodes with a point-to-point channel between them
-    NodeContainer n0n3 = NodeContainer (nodeContainer.Get (0), nodeContainer.Get (3)); //h1r1
-    NodeContainer n1n3 = NodeContainer (nodeContainer.Get (1), nodeContainer.Get (3)); //h2r1
-    NodeContainer n2n3 = NodeContainer (nodeContainer.Get (2), nodeContainer.Get (3)); //h3r1
-    NodeContainer n3n4 = NodeContainer (nodeContainer.Get (3), nodeContainer.Get (4)); //r1r2
-    NodeContainer n4n5 = NodeContainer (nodeContainer.Get (4), nodeContainer.Get (5)); //r2h4
-    NodeContainer n4n6 = NodeContainer (nodeContainer.Get (4), nodeContainer.Get (6)); //r2h5
-    NodeContainer n4n7 = NodeContainer (nodeContainer.Get (4), nodeContainer.Get (7)); //r2h6
+    NodeContainer node_0node_3 = NodeContainer (nodeContainer.Get (0), nodeContainer.Get (3)); //h1r1
+    NodeContainer node_1node_3 = NodeContainer (nodeContainer.Get (1), nodeContainer.Get (3)); //h2r1
+    NodeContainer node_2node_3 = NodeContainer (nodeContainer.Get (2), nodeContainer.Get (3)); //h3r1
+    NodeContainer node_3node_4 = NodeContainer (nodeContainer.Get (3), nodeContainer.Get (4)); //r1r2
+    NodeContainer node_4node_5 = NodeContainer (nodeContainer.Get (4), nodeContainer.Get (5)); //r2h4
+    NodeContainer node_4node_6 = NodeContainer (nodeContainer.Get (4), nodeContainer.Get (6)); //r2h5
+    NodeContainer node_4node_7 = NodeContainer (nodeContainer.Get (4), nodeContainer.Get (7)); //r2h6
 
     //installs internet stacks on our two nodes
     InternetStackHelper internet;
@@ -225,12 +225,12 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     //settings attributes for p2p connections between nodes and routers
     helper.SetDeviceAttribute ("DataRate", StringValue ("100Mbps"));
     helper.SetChannelAttribute ("Delay", StringValue ("10ms"));
-    NetDeviceContainer d0d3 = helper.Install (n0n3);
-    NetDeviceContainer d1d3 = helper.Install (n1n3);
-    NetDeviceContainer d2d3 = helper.Install (n2n3);
-    NetDeviceContainer d4d5 = helper.Install (n4n5);
-    NetDeviceContainer d4d6 = helper.Install (n4n6);
-    NetDeviceContainer d4d7 = helper.Install (n4n7);
+    NetDeviceContainer device_0device_3 = helper.Install (node_0node_3);
+    NetDeviceContainer device_1device_3 = helper.Install (node_1node_3);
+    NetDeviceContainer device_2device_3 = helper.Install (node_2node_3);
+    NetDeviceContainer device_4device_5 = helper.Install (node_4node_5);
+    NetDeviceContainer device_4device_6 = helper.Install (node_4node_6);
+    NetDeviceContainer device_4device_7 = helper.Install (node_4node_7);
 
     //settings attributes for p2p connections between routers r1-r2
     // uint32_t quesize = 125000;
@@ -239,32 +239,32 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     // p2p.SetQueue("ns3::DropTailQueue","Mode",EnumValue (DropTailQueue::QUEUE_MODE_BYTES),"MaxBytes",UintegerValue (125000));
     helper.SetDeviceAttribute ("DataRate", StringValue ("10Mbps"));
     helper.SetChannelAttribute ("Delay", StringValue ("100ms"));
-    NetDeviceContainer d3d4 = helper.Install (n3n4);
+    NetDeviceContainer device_3device_4 = helper.Install (node_3node_4);
 
     //creates interfaces and assigns IP addresses for the point-to-point devices.
 
     NS_LOG_INFO ("Assign IP Addresses.");
     Ipv4AddressHelper address_helper;
     address_helper.SetBase ("10.1.1.0", "255.255.255.0");
-    Ipv4InterfaceContainer i0i3 = address_helper.Assign (d0d3);
+    Ipv4InterfaceContainer i0i3 = address_helper.Assign (device_0device_3);
 
     address_helper.SetBase ("10.1.2.0", "255.255.255.0");
-    Ipv4InterfaceContainer i1i3 = address_helper.Assign (d1d3);
+    Ipv4InterfaceContainer i1i3 = address_helper.Assign (device_1device_3);
 
     address_helper.SetBase ("10.1.3.0", "255.255.255.0");
-    Ipv4InterfaceContainer i2i3 = address_helper.Assign (d2d3);
+    Ipv4InterfaceContainer i2i3 = address_helper.Assign (device_2device_3);
 
     address_helper.SetBase ("10.1.4.0", "255.255.255.0");
-    Ipv4InterfaceContainer i3i4 = address_helper.Assign (d3d4);
+    Ipv4InterfaceContainer i3i4 = address_helper.Assign (device_3device_4);
 
     address_helper.SetBase ("10.1.5.0", "255.255.255.0");
-    Ipv4InterfaceContainer i4i5 = address_helper.Assign (d4d5);
+    Ipv4InterfaceContainer i4i5 = address_helper.Assign (device_4device_5);
 
     address_helper.SetBase ("10.1.6.0", "255.255.255.0");
-    Ipv4InterfaceContainer i4i6 = address_helper.Assign (d4d6);
+    Ipv4InterfaceContainer i4i6 = address_helper.Assign (device_4device_6);
 
     address_helper.SetBase ("10.1.7.0", "255.255.255.0");
-    Ipv4InterfaceContainer i4i7 = address_helper.Assign (d4d7);
+    Ipv4InterfaceContainer i4i7 = address_helper.Assign (device_4device_7);
 
     NS_LOG_INFO ("Enable static global routing.");
     Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
@@ -459,9 +459,17 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     Simulator::Destroy ();
 
     // Changing buffer size
-    // if(bufSize < 100*1500) bufSize+=10*1500;
-    // else bufSize+=100*1500;
-    size_buffer+=200*1500
+    if(bufSize < 100*1500) {
+        bufSize+=12*1500;
+    }
+    else {
+        if(bufSize < 400*1500){
+            bufSize+=120*1500;
+        }else{
+            bufSize+=150*1500;
+        }
+    }
+    // size_buffer+=200*1500
   }
 
 /***************************************/
