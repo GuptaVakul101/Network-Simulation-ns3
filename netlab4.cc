@@ -306,25 +306,25 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier> (flowmon.GetClassifier ());
 
     //object that monitors and reports back packet flows observed during a simulation
-    std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats ();
+    std::map<FlowId, FlowMonitor::FlowStats> statistics = monitor->GetFlowStats ();
 
-    double Sumx = 0, SumSqx = 0, through_udp=0,through_tcp=0;
+    double x = 0, y = 0, through_udp=0,through_tcp=0;
 
-    for (std::map<FlowId, FlowMonitor::FlowStats>::const_iterator i = stats.begin (); i != stats.end (); ++i)
+    for (std::map<FlowId, FlowMonitor::FlowStats>::const_iterator i = statistics.begin (); i != statistics.end (); ++i)
     {
         Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow (i->first);
         // Calculating Throughput for different flows
         double TPut = i->second.rxBytes * 8.0 / (i->second.timeLastRxPacket.GetSeconds() - i->second.timeFirstTxPacket.GetSeconds())/1024/1024;
-        Sumx += TPut;
-        SumSqx += TPut * TPut ;
+        x += TPut;
+        y += TPut * TPut ;
         // If the connection is using TCP protocol.
         if(t.protocol == 6){
           through_tcp += TPut;
         }
     }
     // Calculating UDP throughput
-    through_udp = Sumx - through_tcp;
-    double fair_id = (Sumx * Sumx)/ (6 * SumSqx) ;
+    through_udp = x - through_tcp;
+    double fair_id = (x * x)/ (6 * y) ;
     // dataset1.Add (bufSize/1500, FairnessIndex);
     plot_dataset[0].Add (size_buffer/1500, fair_id);
 
