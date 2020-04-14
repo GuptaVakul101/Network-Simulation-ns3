@@ -161,81 +161,85 @@ IncRate (Ptr<MyApp> app, DataRate rate, FlowMonitorHelper *fmhelper, Ptr<FlowMon
         if(tuple.protocol == 17){
           sumudp += tput;
         }
-        
+
       }
       std::cout << sumtcp<< "::"<<sumudp<<"\n";
       tcpth.push_back(sumtcp);
       udpth.push_back(sumudp);
-      
+
   }
     return;
 }
 
-//       n0 ---+      +--- n5
-//             |      |
-//       n1 ---n3 -- n4--- n6
-//             |      |
-//       n2 ---+      +--- n7
 
 int main (int argc, char *argv[])
 {
   Time::SetResolution (Time::NS);
   Config::SetDefault("ns3::TcpL4Protocol::SocketType", TypeIdValue (TcpNewReno::GetTypeId()));
 
-	
+
 //making datasets for plots
-  Gnuplot2dDataset dataset1;
-  dataset1.SetStyle (Gnuplot2dDataset::LINES_POINTS);
-  Gnuplot2dDataset dataset2;
-  dataset2.SetStyle (Gnuplot2dDataset::LINES_POINTS);
-  Gnuplot2dDataset dataset3;
-  dataset3.SetStyle (Gnuplot2dDataset::LINES_POINTS);
-  Gnuplot2dDataset dataset4;
-  dataset4.SetStyle (Gnuplot2dDataset::LINES_POINTS);
-  Gnuplot2dDataset dataset5;
-  dataset5.SetStyle (Gnuplot2dDataset::LINES_POINTS);
+
+    Gnuplot2dDataset plot_dataset[5];
+    for(int i = 0; i < 5; i++){
+        plot_dataset[i].SetStyle (Gnuplot2dDataset::LINES_POINTS);
+    }
+
+  // Gnuplot2dDataset dataset1;
+  // dataset1.SetStyle (Gnuplot2dDataset::LINES_POINTS);
+  // Gnuplot2dDataset dataset2;
+  // dataset2.SetStyle (Gnuplot2dDataset::LINES_POINTS);
+  // Gnuplot2dDataset dataset3;
+  // dataset3.SetStyle (Gnuplot2dDataset::LINES_POINTS);
+  // Gnuplot2dDataset dataset4;
+  // dataset4.SetStyle (Gnuplot2dDataset::LINES_POINTS);
+  // Gnuplot2dDataset dataset5;
+  // dataset5.SetStyle (Gnuplot2dDataset::LINES_POINTS);
 
 //varying buffersize from 10*1500 - 800*1500
-for(int bufSize=10*1500;bufSize<=800*1500;)
-{ 
+for(int size_buffer=10*1500;size_buffer<=800*1500;)
+{
     NS_LOG_INFO ("For Visualization!");
-    CommandLine cmd;
-    cmd.Parse (argc, argv);
+    CommandLine commandLine;
+    commandLine.Parse (argc, argv);
 
     NS_LOG_INFO ("Create Nodes.");
-    NodeContainer nodes;
-    nodes.Create (8);
+    NodeContainer nodeContainer;
+    nodeContainer.Create (8);
 
 //creating node containers which creates two nodes with a point-to-point channel between them
-    NodeContainer n0n3 = NodeContainer (nodes.Get (0), nodes.Get (3)); //h1r1
-    NodeContainer n1n3 = NodeContainer (nodes.Get (1), nodes.Get (3)); //h2r1
-    NodeContainer n2n3 = NodeContainer (nodes.Get (2), nodes.Get (3)); //h3r1
-    NodeContainer n3n4 = NodeContainer (nodes.Get (3), nodes.Get (4)); //r1r2
-    NodeContainer n4n5 = NodeContainer (nodes.Get (4), nodes.Get (5)); //r2h4
-    NodeContainer n4n6 = NodeContainer (nodes.Get (4), nodes.Get (6)); //r2h5
-    NodeContainer n4n7 = NodeContainer (nodes.Get (4), nodes.Get (7)); //r2h6
+    NodeContainer n0n3 = NodeContainer (nodeContainer.Get (0), nodeContainer.Get (3)); //h1r1
+    NodeContainer n1n3 = NodeContainer (nodeContainer.Get (1), nodeContainer.Get (3)); //h2r1
+    NodeContainer n2n3 = NodeContainer (nodeContainer.Get (2), nodeContainer.Get (3)); //h3r1
+    NodeContainer n3n4 = NodeContainer (nodeContainer.Get (3), nodeContainer.Get (4)); //r1r2
+    NodeContainer n4n5 = NodeContainer (nodeContainer.Get (4), nodeContainer.Get (5)); //r2h4
+    NodeContainer n4n6 = NodeContainer (nodeContainer.Get (4), nodeContainer.Get (6)); //r2h5
+    NodeContainer n4n7 = NodeContainer (nodeContainer.Get (4), nodeContainer.Get (7)); //r2h6
 
-    //installs internet stacks on our two nodes 
+    //installs internet stacks on our two nodes
     InternetStackHelper internet;
-    internet.Install (nodes);
+    internet.Install (nodeContainer);
 
     NS_LOG_INFO ("Create Channels.");
-    PointToPointHelper p2p;
+    PointToPointHelper helper;
     //settings attributes for p2p connections between nodes and routers
-    p2p.SetDeviceAttribute ("DataRate", StringValue ("100Mbps"));
-    p2p.SetChannelAttribute ("Delay", StringValue ("10ms"));
-    NetDeviceContainer d0d3 = p2p.Install (n0n3);
-    NetDeviceContainer d1d3 = p2p.Install (n1n3);
-    NetDeviceContainer d2d3 = p2p.Install (n2n3);
-    NetDeviceContainer d4d5 = p2p.Install (n4n5);
-    NetDeviceContainer d4d6 = p2p.Install (n4n6);
-    NetDeviceContainer d4d7 = p2p.Install (n4n7);
+    helper.SetDeviceAttribute ("DataRate", StringValue ("100Mbps"));
+    helper.SetChannelAttribute ("Delay", StringValue ("10ms"));
+    NetDeviceContainer d0d3 = helper.Install (n0n3);
+    NetDeviceContainer d1d3 = helper.Install (n1n3);
+    NetDeviceContainer d2d3 = helper.Install (n2n3);
+    NetDeviceContainer d4d5 = helper.Install (n4n5);
+    NetDeviceContainer d4d6 = helper.Install (n4n6);
+    NetDeviceContainer d4d7 = helper.Install (n4n7);
 
     //settings attributes for p2p connections between routers r1-r2
-    p2p.SetQueue("ns3::DropTailQueue","Mode",EnumValue (DropTailQueue::QUEUE_MODE_BYTES),"MaxBytes",UintegerValue (125000));
-    p2p.SetDeviceAttribute ("DataRate", StringValue ("10Mbps"));
-    p2p.SetChannelAttribute ("Delay", StringValue ("100ms"));
-    NetDeviceContainer d3d4 = p2p.Install (n3n4);
+    // uint32_t quesize = 125000;
+    // p2p.SetQueue ("ns3::DropTailQueue","Mode", StringValue ("QUEUE_MODE_PACKETS"),"MaxPackets", UintegerValue (quesize));
+    helper.SetQueue ("ns3::DropTailQueue<Packet>", "MaxSize", QueueSizeValue (QueueSize ("100p"))); // p in 100p stands for packets
+    // p2p.SetQueue("ns3::DropTailQueue","Mode",EnumValue (DropTailQueue::QUEUE_MODE_BYTES),"MaxBytes",UintegerValue (125000));
+    helper.SetDeviceAttribute ("DataRate", StringValue ("10Mbps"));
+    helper.SetChannelAttribute ("Delay", StringValue ("100ms"));
+    NetDeviceContainer d3d4 = helper.Install (n3n4);
 
     //creates interfaces and assigns IP addresses for the point-to-point devices.
 
@@ -272,57 +276,57 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
     //destination node to receive TCP connections and data
     Address sinkAddress1 (InetSocketAddress (i4i7.GetAddress (1), sinkPort1));
     PacketSinkHelper packetSinkHelper1 ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort1));
-    ApplicationContainer sinkApps1 = packetSinkHelper1.Install (nodes.Get (7));
+    ApplicationContainer sinkApps1 = packetSinkHelper1.Install (nodeContainer.Get (7));
     sinkApps1.Start (Seconds (0.));
     sinkApps1.Stop (Seconds (15.));
 
     //creating socket at host
-    Ptr<Socket> ns3TcpSocket1 = Socket::CreateSocket (nodes.Get (0), TcpSocketFactory::GetTypeId ());
-  	ns3TcpSocket1->SetAttribute("SndBufSize",  ns3::UintegerValue(bufSize));
-  	ns3TcpSocket1->SetAttribute("RcvBufSize",  ns3::UintegerValue(bufSize));
-  	
+    Ptr<Socket> ns3TcpSocket1 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
+  	ns3TcpSocket1->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
+  	ns3TcpSocket1->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
+
     //creating a Myapp object app1
     Ptr<MyApp> app1 = CreateObject<MyApp> ();
     app1->Setup (ns3TcpSocket1, sinkAddress1, 1500, 1000000, DataRate ("20Mbps"));
-    nodes.Get (0)->AddApplication (app1);
+    nodeContainer.Get (0)->AddApplication (app1);
     //setting start and stop time of app
     app1->SetStartTime (Seconds (1.));
     app1->SetStopTime (Seconds (15.));
 
 
-    //tcp - h4 to h3
+    // UDP - h4 to h3
     uint16_t sinkPort2 = 8082;
     Address sinkAddress2 (InetSocketAddress (i2i3.GetAddress (0), sinkPort2));
-    PacketSinkHelper packetSinkHelper2 ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort2));
-    ApplicationContainer sinkApps2 = packetSinkHelper2.Install (nodes.Get (2));
+    PacketSinkHelper packetSinkHelper2 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort2));
+    ApplicationContainer sinkApps2 = packetSinkHelper2.Install (nodeContainer.Get (2));
     sinkApps2.Start (Seconds (0.));
     sinkApps2.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3TcpSocket2 = Socket::CreateSocket (nodes.Get (5), TcpSocketFactory::GetTypeId ());
-  	ns3TcpSocket2->SetAttribute("SndBufSize",  ns3::UintegerValue(bufSize));
-  	ns3TcpSocket2->SetAttribute("RcvBufSize",  ns3::UintegerValue(bufSize));
+    Ptr<Socket> ns3UdpSocket2 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
+  	ns3UdpSocket2->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app2 = CreateObject<MyApp> ();
-    app2->Setup (ns3TcpSocket2, sinkAddress2, 1500, 1000000, DataRate ("20Mbps"));
-    nodes.Get (5)->AddApplication (app2);
+    app2->Setup (ns3UdpSocket2, sinkAddress2, 1500, 1000000, DataRate ("20Mbps"));
+    nodeContainer.Get (5)->AddApplication (app2);
     app2->SetStartTime (Seconds (1.));
     app2->SetStopTime (Seconds (15.));
+
 
     //tcp - h1 to h2
     uint16_t sinkPort3 = 8083;
     Address sinkAddress3 (InetSocketAddress (i1i3.GetAddress (0), sinkPort3));
     PacketSinkHelper packetSinkHelper3("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort3));
-    ApplicationContainer sinkApps3 = packetSinkHelper3.Install (nodes.Get (1));
+    ApplicationContainer sinkApps3 = packetSinkHelper3.Install (nodeContainer.Get (1));
     sinkApps3.Start (Seconds (0.));
     sinkApps3.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3TcpSocket3 = Socket::CreateSocket (nodes.Get (0), TcpSocketFactory::GetTypeId ());
-  	ns3TcpSocket3->SetAttribute("SndBufSize",  ns3::UintegerValue(bufSize));
-  	ns3TcpSocket3->SetAttribute("RcvBufSize",  ns3::UintegerValue(bufSize));
+    Ptr<Socket> ns3TcpSocket3 = Socket::CreateSocket (nodeContainer.Get (0), TcpSocketFactory::GetTypeId ());
+  	ns3TcpSocket3->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
+  	ns3TcpSocket3->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app3 = CreateObject<MyApp> ();
     app3->Setup (ns3TcpSocket3, sinkAddress3, 1500, 1000000, DataRate ("20Mbps"));
-    nodes.Get (0)->AddApplication (app3);
+    nodeContainer.Get (0)->AddApplication (app3);
     app3->SetStartTime (Seconds (1.));
     app3->SetStopTime (Seconds (15.));
 
@@ -330,17 +334,17 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
     uint16_t sinkPort4 = 8084;
     Address sinkAddress4 (InetSocketAddress (i4i7.GetAddress (1), sinkPort4));
     PacketSinkHelper packetSinkHelper4("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort4));
-    ApplicationContainer sinkApps4 = packetSinkHelper4.Install (nodes.Get (7));
+    ApplicationContainer sinkApps4 = packetSinkHelper4.Install (nodeContainer.Get (7));
     sinkApps4.Start (Seconds (0.));
     sinkApps4.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3TcpSocket4 = Socket::CreateSocket (nodes.Get (6), TcpSocketFactory::GetTypeId ());
-  	ns3TcpSocket4->SetAttribute("SndBufSize",  ns3::UintegerValue(bufSize));
-  	ns3TcpSocket4->SetAttribute("RcvBufSize",  ns3::UintegerValue(bufSize));
+    Ptr<Socket> ns3TcpSocket4 = Socket::CreateSocket (nodeContainer.Get (6), TcpSocketFactory::GetTypeId ());
+  	ns3TcpSocket4->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
+  	ns3TcpSocket4->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app4 = CreateObject<MyApp> ();
     app4->Setup (ns3TcpSocket4, sinkAddress4, 1500, 1000000, DataRate ("20Mbps"));
-    nodes.Get (6)->AddApplication (app4);
+    nodeContainer.Get (6)->AddApplication (app4);
     app4->SetStartTime (Seconds (1.));
     app4->SetStopTime (Seconds (15.));
 
@@ -348,35 +352,34 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
     uint16_t sinkPort5 = 8085;
     Address sinkAddress5 (InetSocketAddress (i3i4.GetAddress (0), sinkPort5));
     PacketSinkHelper packetSinkHelper5 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort5));
-    ApplicationContainer sinkApps5 = packetSinkHelper5.Install (nodes.Get (2));
+    ApplicationContainer sinkApps5 = packetSinkHelper5.Install (nodeContainer.Get (2));
     sinkApps5.Start (Seconds (0.));
     sinkApps5.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3UdpSocket5 = Socket::CreateSocket (nodes.Get (1), UdpSocketFactory::GetTypeId ());
-  	ns3UdpSocket5->SetAttribute("RcvBufSize",  ns3::UintegerValue(bufSize));
+    Ptr<Socket> ns3UdpSocket5 = Socket::CreateSocket (nodeContainer.Get (1), UdpSocketFactory::GetTypeId ());
+  	ns3UdpSocket5->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app5 = CreateObject<MyApp> ();
     app5->Setup (ns3UdpSocket5, sinkAddress5, 1500, 1000000, DataRate ("20Mbps"));
-    nodes.Get (1)->AddApplication (app5);
+    nodeContainer.Get (1)->AddApplication (app5);
     app5->SetStartTime (Seconds (1.));
     app5->SetStopTime (Seconds (15.));
 
-    
 
     //udp - h4 to h5
     uint16_t sinkPort6 = 8086;
     Address sinkAddress6 (InetSocketAddress (i4i6.GetAddress (1), sinkPort6));
     PacketSinkHelper packetSinkHelper6 ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort6));
-    ApplicationContainer sinkApps6 = packetSinkHelper6.Install (nodes.Get (6));
+    ApplicationContainer sinkApps6 = packetSinkHelper6.Install (nodeContainer.Get (6));
     sinkApps6.Start (Seconds (0.));
     sinkApps6.Stop (Seconds (15.));
 
-    Ptr<Socket> ns3UdpSocket6 = Socket::CreateSocket (nodes.Get (5), UdpSocketFactory::GetTypeId ());
-  	ns3UdpSocket6->SetAttribute("RcvBufSize",  ns3::UintegerValue(bufSize));
+    Ptr<Socket> ns3UdpSocket6 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
+  	ns3UdpSocket6->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
     Ptr<MyApp> app6 = CreateObject<MyApp> ();
     app6->Setup (ns3UdpSocket6, sinkAddress6, 1500, 1000000, DataRate ("20Mbps"));
-    nodes.Get (5)->AddApplication (app6);
+    nodeContainer.Get (5)->AddApplication (app6);
     app6->SetStartTime (Seconds (1.));
     app6->SetStopTime (Seconds (15.));
 
@@ -385,7 +388,7 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
     FlowMonitorHelper flowmon;
     Ptr<FlowMonitor> monitor = flowmon.InstallAll();
 
-    if(bufSize == 10*1500){
+    if(size_buffer == 10*1500){
       //scheduling increase rate function over time to see udp flow rate's effect on tcp/udp throughput.
       //changing th udp flow rate for app5 only and seeing it's effect on other flows
       Simulator::Schedule (Seconds(2.0), &IncRate, app5, DataRate("30Mbps"), &flowmon, monitor,1);
@@ -415,7 +418,7 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
     Simulator::Stop (Seconds(15.0));
     //executing the simulation
     Simulator::Run ();
-    
+
   	monitor->CheckForLostPackets ();
 
     //Classifies packets by looking at their IP and TCP/UDP headers.
@@ -441,17 +444,24 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
     // Calculating UDP throughput
     udpthroughput = Sumx - tcpthroughput;
   	double FairnessIndex = (Sumx * Sumx)/ (6 * SumSqx) ;
-  	dataset1.Add (bufSize/1500, FairnessIndex);
-    dataset2.Add(bufSize/1500, udpthroughput);
-    dataset3.Add(bufSize/1500, tcpthroughput);
-  	
+  	// dataset1.Add (bufSize/1500, FairnessIndex);
+    plot_dataset[0].Add (size_buffer/1500, FairnessIndex);
+
+    // dataset2.Add(bufSize/1500, udpthroughput);
+    plot_dataset[1].Add(size_buffer/1500, udpthroughput);
+
+    // dataset3.Add(bufSize/1500, tcpthroughput);
+    plot_dataset[2].Add(size_buffer/1500, tcpthroughput);
+
+
     std :: cout << " FairnessIndex:	" << FairnessIndex << std :: endl;
     monitor->SerializeToXmlFile("lab-1.flowmon", true, true);
     Simulator::Destroy ();
 
     // Changing buffer size
-    if(bufSize < 100*1500) bufSize+=10*1500;
-    else bufSize+=100*1500;
+    // if(bufSize < 100*1500) bufSize+=10*1500;
+    // else bufSize+=100*1500;
+    size_buffer+=200*1500
   }
 
 /***************************************/
@@ -466,20 +476,23 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
 
   // Adding dataset to the plot
 
-	plot1.AddDataset (dataset1);
+  // plot1.AddDataset (dataset1);
+	plot1.AddDataset (plot_dataset[0]);
 	std :: ofstream plotFile1 ("BufferSize-vs-FairnessIndex.plt");
 	plot1.GenerateOutput (plotFile1);
 	plotFile1.close ();
 
 /***************************************/
-  
+
   Gnuplot plot2 ("buffvsudp");
   plot2.SetTitle ("buffvsudpthroughput");
   plot2.SetTerminal ("png");
   plot2.SetLegend ("BufferSize", "udpthroughput");
   plot2.AppendExtra ("set xrange [0:800]");
 
-  plot2.AddDataset (dataset2);
+  // plot2.AddDataset (dataset2);
+  plot2.AddDataset (plot_dataset[1]);
+
   std :: ofstream plotFile2 ("BufferSize-vs-UDPthroughput.plt");
   plot2.GenerateOutput (plotFile2);
   plotFile2.close ();
@@ -491,8 +504,9 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
   plot3.SetTerminal ("png");
   plot3.SetLegend ("BufferSize", "tcpthroughput");
   plot3.AppendExtra ("set xrange [0:800]");
-  
-  plot3.AddDataset (dataset3);
+
+  plot3.AddDataset (plot_dataset[2]);
+  // plot3.AddDataset (dataset3);
   std :: ofstream plotFile3 ("BufferSize-vs-TCPthroughput.plt");
   plot3.GenerateOutput (plotFile3);
   plotFile3.close ();
@@ -503,8 +517,11 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
   dtime[0] = 2; dtime[1] = 3; dtime[2] = 4; dtime[3] =5; dtime[4] = 6; dtime[5] = 7; dtime[6] = 8; dtime[7] = 10; dtime[8] = 15;
    // dtime[9] = 16; dtime[10] = 17; dtime[11] = 18; dtime[12] = 20,dtime[13]=25;
   for(int i =0 ;i < 9; i++){
-    dataset4.Add(dtime[i],tcpth[i]);
-    dataset5.Add(dtime[i],udpth[i]);
+      plot_dataset[3].Add(dtime[i],tcpth[i]);
+    // dataset4.Add(dtime[i],tcpth[i]);
+    // dataset5.Add(dtime[i],udpth[i]);
+    plot_dataset[4].Add(dtime[i],udpth[i]);
+
   }
 
   Gnuplot plot4 ("udpvstcpthroughput");
@@ -512,7 +529,9 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
   plot4.SetTerminal ("png");
   plot4.SetLegend ("Time", "TCPthroughput");
 
-  plot4.AddDataset (dataset4);
+  // plot4.AddDataset (dataset4);
+  plot4.AddDataset (plot_dataset[3]);
+
   std :: ofstream plotFile4 ("Time-vs-TCPthroughput.plt");
   plot4.GenerateOutput (plotFile4);
   plotFile4.close ();
@@ -524,7 +543,9 @@ for(int bufSize=10*1500;bufSize<=800*1500;)
   plot5.SetTerminal ("png");
   plot5.SetLegend ("Time", "UDPthroughput");
 
-  plot5.AddDataset (dataset5);
+  // plot5.AddDataset (dataset5);
+  plot5.AddDataset (plot_dataset[4]);
+
   std :: ofstream plotFile5 ("Time-vs-UDPthroughput.plt");
   plot5.GenerateOutput (plotFile5);
   plotFile5.close ();
