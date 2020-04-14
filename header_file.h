@@ -14,22 +14,22 @@ using namespace ns3;
 
 // Coded an Application so we could take that Socket and use it during simulation
 
-class MyApp : public Application
+class netlab_app : public Application
 {
 public:
 
-  MyApp ();
-  virtual ~MyApp();
+  netlab_app ();
+  virtual ~netlab_app();
 
-  void Setup (Ptr<Socket> socket, Address address, uint32_t packetSize, uint32_t nPackets, DataRate dataRate);
-  void ChangeRate(DataRate newrate);
+  void initialize_setup (Ptr<Socket> socket, Address address, uint32_t packetSize, uint32_t nPackets, DataRate dataRate);
+  void rate_of_change(DataRate newrate);
 
 private:
   virtual void StartApplication (void);
   virtual void StopApplication (void);
 
-  void ScheduleTx (void);
-  void SendPacket (void);
+  void next_pkt_sched (void);
+  void pkt_send (void);
 
   Ptr<Socket>     m_socket;
   Address         m_peer;
@@ -41,9 +41,9 @@ private:
   uint32_t        m_packetsSent;
 };
 
-// Constructor for Myapp class
+// Constructor for netlab_app class
 
-MyApp::MyApp ()
+netlab_app::netlab_app ()
   : m_socket (0),
     m_peer (),
     m_packetSize (0),
@@ -55,9 +55,9 @@ MyApp::MyApp ()
 {
 }
 
-// Destructor for Myapp class
+// Destructor for netlab_app class
 
-MyApp::~MyApp()
+netlab_app::~netlab_app()
 {
   m_socket = 0;
 }
@@ -65,7 +65,7 @@ MyApp::~MyApp()
 //allow the Socket to be created at configuration time
 
 void
-MyApp::Setup (Ptr<Socket> socket, Address address, uint32_t packetSize, uint32_t nPackets, DataRate dataRate)
+netlab_app::initialize_setup (Ptr<Socket> socket, Address address, uint32_t packetSize, uint32_t nPackets, DataRate dataRate)
 {
   m_socket = socket;
   m_peer = address;
@@ -76,18 +76,18 @@ MyApp::Setup (Ptr<Socket> socket, Address address, uint32_t packetSize, uint32_t
 
 //required to start sending data during the simulation.
 void
-MyApp::StartApplication (void)
+netlab_app::StartApplication (void)
 {
   m_running = true;
   m_packetsSent = 0;
   m_socket->Bind ();
   m_socket->Connect (m_peer);
-  SendPacket ();
+  pkt_send ();
 }
 
 //required to stop sending data during the simulation.
 void
-MyApp::StopApplication (void)
+netlab_app::StopApplication (void)
 {
   m_running = false;
 
@@ -104,31 +104,31 @@ MyApp::StopApplication (void)
 
 // starts data flow
 void
-MyApp::SendPacket (void)
+netlab_app::pkt_send (void)
 {
   Ptr<Packet> packet = Create<Packet> (m_packetSize);
   m_socket->Send (packet);
 
   if (++m_packetsSent < m_nPackets)
     {
-      ScheduleTx ();
+      next_pkt_sched ();
     }
 }
 
 //schedule the send packet function tnext
 void
-MyApp::ScheduleTx (void)
+netlab_app::next_pkt_sched (void)
 {
   if (m_running)
     {
       Time tNext (Seconds (m_packetSize * 8 / static_cast<double> (m_dataRate.GetBitRate ())));
-      m_sendEvent = Simulator::Schedule (tNext, &MyApp::SendPacket, this);
+      m_sendEvent = Simulator::Schedule (tNext, &netlab_app::pkt_send, this);
     }
 }
 
 //change rate of our app
 void
-MyApp::ChangeRate(DataRate newrate)
+netlab_app::rate_of_change(DataRate newrate)
 {
    m_dataRate = newrate;
    return;
