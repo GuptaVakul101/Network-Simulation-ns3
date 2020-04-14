@@ -272,9 +272,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
       //changing th udp flow rate for app5 only and seeing it's effect on other flows
       Simulator::Schedule (Seconds(2.0), &IncRate, conn5, DataRate("30Mbps"), &helper_flow, monitor,1);
       Simulator::Schedule (Seconds(3.0), &IncRate, conn5, DataRate("40Mbps"), &helper_flow, monitor,1);
-      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("50Mbps"), &helper_flow, monitor,1);
-      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("70Mbps"), &helper_flow, monitor,1);
-      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("80Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("60Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("80Mbps"), &helper_flow, monitor,1);
+      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("90Mbps"), &helper_flow, monitor,1);
       Simulator::Schedule (Seconds(7.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,1);
       Simulator::Schedule (Seconds(8.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,1);
       Simulator::Schedule (Seconds(10.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,1);
@@ -284,9 +284,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
       //scheduling udp flow rate gradually over time from 20Mbps to 100Mbps
       Simulator::Schedule (Seconds(2.0), &IncRate, conn5, DataRate("30Mbps"), &helper_flow, monitor,0);
       Simulator::Schedule (Seconds(3.0), &IncRate, conn5, DataRate("40Mbps"), &helper_flow, monitor,0);
-      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("50Mbps"), &helper_flow, monitor,0);
-      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("70Mbps"), &helper_flow, monitor,0);
-      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("80Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(4.0), &IncRate, conn5, DataRate("60Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(5.0), &IncRate, conn5, DataRate("80Mbps"), &helper_flow, monitor,0);
+      Simulator::Schedule (Seconds(6.0), &IncRate, conn5, DataRate("90Mbps"), &helper_flow, monitor,0);
       Simulator::Schedule (Seconds(7.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,0);
       Simulator::Schedule (Seconds(8.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,0);
       Simulator::Schedule (Seconds(10.0), &IncRate, conn5, DataRate("100Mbps"), &helper_flow, monitor,0);
