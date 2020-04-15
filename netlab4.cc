@@ -21,9 +21,9 @@ NS_LOG_COMPONENT_DEFINE ("Assignment_4");
 
 // Increase the data rate at specific times for obesrvations
 void
-IncRate (Ptr<MyApp> my_app, DataRate rate_flow, FlowMonitorHelper *help_fm, Ptr<FlowMonitor> flow_monitoring, int is_graph_capture)
+IncRate (Ptr<netlab_app> my_app, DataRate rate_flow, FlowMonitorHelper *help_fm, Ptr<FlowMonitor> flow_monitoring, int is_graph_capture)
 {
-  my_app->ChangeRate(rate_flow);
+  my_app->rate_of_change(rate_flow);
   if(is_graph_capture){
     std::map<FlowId, FlowMonitor::FlowStats> stat_flow = flow_monitoring->GetFlowStats();
       Ptr<Ipv4FlowClassifier> classing = DynamicCast<Ipv4FlowClassifier> (help_fm->GetClassifier());
@@ -167,9 +167,9 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     tcp1->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
     tcp1->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    //creating a Myapp object conn1
-    Ptr<MyApp> conn1 = CreateObject<MyApp> ();
-    conn1->Setup (tcp1, addr1, 1500, 1000000, DataRate ("20Mbps"));
+    //creating a netlab_app object conn1
+    Ptr<netlab_app> conn1 = CreateObject<netlab_app> ();
+    conn1->initialize_setup (tcp1, addr1, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (0)->AddApplication (conn1);
     //setting start and stop time of app
     conn1->SetStartTime (Seconds (1.));
@@ -187,8 +187,8 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     Ptr<Socket> udp2 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
     udp2->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> conn2 = CreateObject<MyApp> ();
-    conn2->Setup (udp2, addr2, 1500, 1000000, DataRate ("20Mbps"));
+    Ptr<netlab_app> conn2 = CreateObject<netlab_app> ();
+    conn2->initialize_setup (udp2, addr2, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (5)->AddApplication (conn2);
     conn2->SetStartTime (Seconds (1.));
     conn2->SetStopTime (Seconds (15.));
@@ -206,8 +206,8 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     tcp3->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
     tcp3->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> conn3 = CreateObject<MyApp> ();
-    conn3->Setup (tcp3, addr3, 1500, 1000000, DataRate ("20Mbps"));
+    Ptr<netlab_app> conn3 = CreateObject<netlab_app> ();
+    conn3->initialize_setup (tcp3, addr3, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (0)->AddApplication (conn3);
     conn3->SetStartTime (Seconds (1.));
     conn3->SetStopTime (Seconds (15.));
@@ -224,8 +224,8 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     tcp4->SetAttribute("SndBufSize",  ns3::UintegerValue(size_buffer));
     tcp4->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> conn4 = CreateObject<MyApp> ();
-    conn4->Setup (tcp4, addr4, 1500, 1000000, DataRate ("20Mbps"));
+    Ptr<netlab_app> conn4 = CreateObject<netlab_app> ();
+    conn4->initialize_setup (tcp4, addr4, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (6)->AddApplication (conn4);
     conn4->SetStartTime (Seconds (1.));
     conn4->SetStopTime (Seconds (15.));
@@ -241,8 +241,8 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     Ptr<Socket> udp5 = Socket::CreateSocket (nodeContainer.Get (1), UdpSocketFactory::GetTypeId ());
     udp5->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> conn5 = CreateObject<MyApp> ();
-    conn5->Setup (udp5, addr5, 1500, 1000000, DataRate ("20Mbps"));
+    Ptr<netlab_app> conn5 = CreateObject<netlab_app> ();
+    conn5->initialize_setup (udp5, addr5, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (1)->AddApplication (conn5);
     conn5->SetStartTime (Seconds (1.));
     conn5->SetStopTime (Seconds (15.));
@@ -259,8 +259,8 @@ for(int size_buffer=10*1500;size_buffer<=800*1500;)
     Ptr<Socket> udp6 = Socket::CreateSocket (nodeContainer.Get (5), UdpSocketFactory::GetTypeId ());
     udp6->SetAttribute("RcvBufSize",  ns3::UintegerValue(size_buffer));
 
-    Ptr<MyApp> conn6 = CreateObject<MyApp> ();
-    conn6->Setup (udp6, addr6, 1500, 1000000, DataRate ("20Mbps"));
+    Ptr<netlab_app> conn6 = CreateObject<netlab_app> ();
+    conn6->initialize_setup (udp6, addr6, 1500, 1000000, DataRate ("20Mbps"));
     nodeContainer.Get (5)->AddApplication (conn6);
     conn6->SetStartTime (Seconds (1.));
     conn6->SetStopTime (Seconds (15.));
